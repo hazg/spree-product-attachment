@@ -1,18 +1,13 @@
 require 'spree_core'
-require 'product_attachments_hooks'
 
 module ProductAttachments
   class Engine < Rails::Engine
-
-    config.autoload_paths += %W(#{config.root}/lib)
+    engine_name 'product_attachments'
 
     def self.activate
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/**/*_decorator*.rb")) do |c|
-        Rails.env.production? ? require(c) : load(c)
-      end
 
-      Product.class_eval do 
-        has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/**/*_decorator*.rb")) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
     end
