@@ -1,4 +1,5 @@
-Deface::Override.new(:virtual_path => "spree/admin/shared/_tabs",
-                     :name => "admin_shared_tabs",
-                     :replace => "code[erb-loud]:contains('tab :products')",
-                     :text => "<%= tab :products , :option_types, :properties, :prototypes, :variants, :product_properties, :product_groups, :taxons, :downloadables %>")
+Deface::Override.new(:virtual_path => "spree/admin/shared/_product_tabs",
+                     :name => "add_downloadables_tab",
+                     :insert_bottom => "[data-hook='admin_product_tabs']",
+                     :partial => "spree/admin/shared/product_downloadables_tab",
+                     :disabled => false)
