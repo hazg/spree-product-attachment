@@ -1,6 +1,7 @@
 module Spree
 	module Admin
 		class DownloadablesController < ResourceController
+		  resource_controller
 		  before_filter :load_data
 
 		  new_action.response do |wants|
