@@ -1,6 +1,6 @@
-<%= render :partial => 'admin/shared/product_sub_menu' %>
+<%= render :partial => 'spree/admin/shared/product_sub_menu' %>
 
-<%= render :partial => 'admin/shared/product_tabs', :locals => {:current => "Downloadable Links"} %>
+<%= render :partial => 'spree/admin/shared/product_tabs', :locals => {:current => "Downloadable Links"} %>
 
 <% form_for(:downloadable, :url => admin_product_downloadable_url(@product), :html => { :method => :put, :multipart => true }) do |f| %>
   	<fieldset>
