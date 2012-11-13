@@ -1,6 +1,6 @@
 module Spree
 	module Admin
-		class DownloadablesController < BaseController
+		class DownloadablesController < ResourceController
 		  resource_controller
 		  before_filter :load_data
 
