@@ -53,11 +53,6 @@ module Spree
 			end
 
 			@variants.insert(0, "All")
-			
-			# @download_limits = @product.variants.collect do |variant|
-			#   variant.downloadables.empty? ? ("\"#{variant.id}\": \'\'") : ("\"#{variant.id}\": #{variant.downloadables.first.download_limit}")
-			# end
-			
 		  end
 		end
 	end
