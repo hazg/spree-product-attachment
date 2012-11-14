@@ -47,13 +47,12 @@ module Spree
 		  private
 
 		  def load_data
-			@product = Spree::Product.find_by_permalink(params[:product_id])
-			@variants = @product.variants.collect do |variant| 
-			  [variant.options_text, variant.id ]
-			end
-
-			@variants.insert(0, "All")
-		  end
+            @product = Product.where(:permalink => params[:product_id]).first
+            @variants = @product.variants.collect do |variant|
+              [variant.options_text, variant.id]
+            end
+            @variants.insert(0, [I18n.t(:all), @product.master.id])
+          end
 		end
 	end
 end
