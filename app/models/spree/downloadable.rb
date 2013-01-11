@@ -1,79 +1,63 @@
-require 'zip/zip'
+require 'digest/md5'
+
 class Spree::Downloadable < Spree::ProductDownload
   has_attached_file :attachment,
                     :url => "/downloadable/:id/:basename.:extension",
                     :path => ":rails_root/public/downloadable/:id/:basename.:extension"
 
   validates_attachment_presence :attachment
-  
   before_save :set_title
-  after_save :create_zip, :unless => :zipfile?
-                    
+
+  scope :visible, where(enabled: true, secret_links_only: false)
+
+
   def filename
-     return attachment_file_name
+    attachment_file_name
   end
-  
-  def zipfile?
-    attachment_content_type == 'application/zip'
+
+  def path
+    attachment.path(:product)
   end
-  
-  # if there are errors from the plugin, then add a more meaningful message
-  def validate
-    unless attachment.errors.empty?
-      # uncomment this to get rid of the less-than-useful interrim messages
-      # errors.clear 
-      errors.add :attachment, "Paperclip returned errors for file '#{attachment_file_name}' - check ImageMagick installation or image source file."
+
+  def mime
+    MIME::Types.type_for(path).first.content_type
+  end
+
+  def secret_link_correct?(secret)
+    secret_hash, order_id = secret.split('-')
+    order = Spree::Order.find(order_id) rescue nil
+    if order && order_contains_product(order)
+      secret == generate_secret_hash(order.id)
+    else
       false
     end
   end
-  
+
+  def generate_secret_hash(order_id)
+    "#{Digest::MD5.hexdigest(id.to_s)}-#{order_id}"
+  end
+
+  def validate
+    unless attachment.errors.empty?
+      errors.add :attachment, "Paperclip returned errors for file '#{attachment_file_name}'."
+      false
+    end
+  end
+
+  def extension_name
+    File.extname(attachment_file_name).split('.').last
+  end
+
   private
-  
+
   def set_title
-    if(self.title.nil? || self.title.empty?)
+    if self.title.blank?
       self.title = self.filename
     end
   end
-  
-  # create a zipped archive file for any product or variant with more than 1 file. 
-  def create_zip
-    variant_downloadable = Downloadable.find(:all, :conditions => 
-                                            ["viewable_id = ? and attachment_content_type != ?", viewable_id, "application/zip"])
-    
-    if(variant_downloadable.size > 1)
-      bundle_filename = "#{variant_downloadable.first.viewable_id}_bundle.zip"
-      bundle_fullpath = "#{RAILS_ROOT}/tmp/" + bundle_filename
-      
-       # Create the zip file
-       Zip::ZipFile.open(bundle_fullpath, Zip::ZipFile::CREATE) {
-        |zipfile|
-        # collect the downlodables
-        variant_downloadable.each do |downloadable|
-            if downloadable.enabled && (downloadable.filename != nil)
-              # add each download to the archive
-              zipfile.add(downloadable.filename, downloadable.attachment.path)
-            end
-        end 
-       }
-       
-       # check if there is an existing zip file Downloadable object. 
-       unless(zip_downloadable = Downloadable.find(:first, :conditions => ["attachment_file_name = ?", bundle_filename]))
-         zip_downloadable = Downloadable.new
-       end
-       zip_downloadable.viewable_id = viewable_id
-       zip_downloadable.viewable_type = viewable_type
-       # zip_downloadable.download_limit = download_limit
-       zip_downloadable.description = I18n::t('zip-file-description')
-       zip_downloadable.attachment = File.new(bundle_fullpath)
-       zip_downloadable.attachment_content_type = "application/zip"
-       zip_downloadable.save
-       zip_downloadable.move_to_top
-       
-       # skip callback, but update all download limits. 
-       # Downloadable.update_all(["viewable_id = ?", viewable_id]) if !download_limit.nil?
-       
-       # delete file from tmp folder.
-       File.delete(bundle_fullpath)
-    end
+
+  def order_contains_product(order)
+    viewable.variants.any?{|v| order.contains?(v) }
   end
+
 end

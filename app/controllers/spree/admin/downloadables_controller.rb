@@ -1,58 +1,29 @@
 module Spree
 	module Admin
-		class DownloadablesController < BaseController
-		  before_filter :load_data
+		class DownloadablesController < ResourceController
+			before_filter :load_data
 
-		  new_action.response do |wants|
-			wants.html {render :action => :new, :layout => false}
-		  end
+		  create.before :set_viewable
+		  update.before :set_viewable
 
-		  create.response do |wants|
-			wants.html {redirect_to admin_product_downloadables_url(@product)}
-		  end
-		  
-		  create.failure.wants.html do
-			render :action => :index
-		  end
+		  belongs_to "spree/product", :find_by => "permalink"
 
-		  update.response do |wants|
-			wants.html {redirect_to admin_product_downloadables_url(@product)}
-		  end
-
-		  create.before do
-			if params[:downloadable].has_key? :viewable_id
-			  if params[:downloadable][:viewable_id] == "All"
-				object.viewable_type = 'Product'
-				object.viewable_id = @product.id
-			  else
-				object.viewable_type = 'Variant'
-				object.viewable_id = params[:downloadable][:viewable_id]
-			  end
-			else
-			  object.viewable_type = 'Product'
-			  object.viewable_id = @product.id
-			end
-		  end
-
-		  destroy.before do 
-			@viewable = object.viewable
-		  end
-
-		  destroy.response do |wants| 
-			wants.html do
-			  render :text => ""
-			end
+		  def edit
+		  	@downloadable = Spree::Downloadable.find(params[:id])
 		  end
 
 		  private
 
-		  def load_data
-            @product = Product.where(:permalink => params[:product_id]).first
-            @variants = @product.variants.collect do |variant|
-              [variant.options_text, variant.id]
-            end
-            @variants.insert(0, [I18n.t(:all), @product.master.id])
-          end
+	    def load_data
+	    	@downloadable = Spree::Downloadable.new
+	      @product = Spree::Product.find_by_permalink(params[:product_id])
+	    end
+
+	    def set_viewable
+	      @downloadable.viewable_type = 'Product'
+	      @downloadable.viewable_id = @product.id
+	    end
+
 		end
 	end
 end

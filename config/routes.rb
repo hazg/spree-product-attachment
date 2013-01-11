@@ -4,7 +4,9 @@ Spree::Core::Engine.routes.prepend do
     resources :products do
       resources :downloadables
     end
-  end  
+  end
+
+  resources :downloadables, only: [:show]
 
   # Add your extension routes here
 end

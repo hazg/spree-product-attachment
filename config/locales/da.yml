@@ -1,0 +1,10 @@
+da:
+  downloads: Downloads
+  downloadables: Downloadables
+  secret_links_only: Hemmeligt link
+  secret: Hemmelig
+  enabled: Vis
+  filename: Filnavn
+  title: 'Titel'
+  zip-file-description: Zip file beskrivelse
+  download_not_available: Download ikke tilgængelig
