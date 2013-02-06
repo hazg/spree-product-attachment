@@ -17,6 +17,6 @@ Gem::Specification.new do |s|
 
   s.has_rdoc = true
 
-  s.add_dependency('spree_core', '>= 1.1.x')
+  s.add_dependency('spree_core')
   s.add_dependency('rubyzip', '>= 0.9.1')
 end
