@@ -4,7 +4,6 @@
     <% @product.downloadables.visible.each do |downloadable| %>
       <li>
       	<%= link_to spree.downloadable_path(downloadable) do %>
-          <%= image_tag("attachment_extension/icons/#{downloadable.extension_name}.gif") %>
 	        <%= downloadable.title %>
         <% end %>
       </li>
