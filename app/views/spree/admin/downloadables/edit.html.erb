@@ -14,7 +14,12 @@
   		<%= f.field_container :title do %>
   			<%= f.label t("title") %><br/>
   			<%= f.text_field :title %>
-  	  	<% end %>
+  	  <% end %>
+
+      <%= f.field_container :password do %>
+        <%= f.label t("password") %><br/>
+        <%= f.text_field :password %>
+      <% end %>
 
   		<%= f.field_container :enabled do %>
   			<%= f.label t("enabled") %><br/>

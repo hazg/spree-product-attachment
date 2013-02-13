@@ -3,10 +3,15 @@
   <ul>
     <% @product.downloadables.visible.each do |downloadable| %>
       <li>
-      	<%= link_to spree.downloadable_path(downloadable) do %>
-	        <%= downloadable.title %>
+      	<% if downloadable.password_protected? %>
+          <%= link_to downloadable.title, '#', onclick: "$('#password_protected_download#{downloadable.id}').modal('show');" %>
+          <%= render 'password_modal', downloadable: downloadable %>
+        <% else %>
+          <%= link_to downloadable.title, spree.downloadable_path(downloadable) %>
         <% end %>
       </li>
     <% end -%>
   </ul>
 <% end -%>
+
+

@@ -23,6 +23,11 @@
 				<%= f.text_field :title %>
 		  <% end %>
 
+      <%= f.field_container :password do %>
+        <%= f.label t("password") %><br/>
+        <%= f.text_field :password %>
+      <% end %>
+
       <%= f.field_container :enabled do %>
         <%= f.label t("enabled") %><br/>
         <%= f.check_box :enabled %>
@@ -51,6 +56,7 @@
 		<th><%= t("filename") %></th>
 		<th><%= t("title") %></th>
 		<th width="40px"><%= t("enabled") %></th>
+    <th width="40px"><%= t("password") %></th>
     <th width="40px"><%= t("secret") %></th>
 		<th width="120px"><%= t("action") %></th>
 	</tr>
@@ -59,6 +65,7 @@
       <td><%= link_to(downloadable.filename, downloadable.attachment.url(:product)) %></td>
       <td><%= downloadable.title %></td>
       <td><%= check_box_tag 'downloadable', 'enabled', downloadable.enabled, :disabled => true %></td>
+      <td><%= check_box_tag 'downloadable', 'password', downloadable.password.present?, :disabled => true %></td>
       <td><%= check_box_tag 'downloadable', 'secret_links_only', downloadable.secret_links_only, :disabled => true %></td>
       <td class="actions" style="padding:0px;">
         <%= link_to_with_icon('edit', t("edit"), edit_admin_product_downloadable_url(@product, downloadable)) %>

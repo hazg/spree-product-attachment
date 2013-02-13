@@ -22,6 +22,18 @@ class Spree::Downloadable < Spree::ProductDownload
     MIME::Types.type_for(path).first.content_type
   end
 
+  def public?
+    !password_protected? && !secret_links_only?
+  end
+
+  def password_protected?
+    password.present?
+  end
+
+  def password_correct?(password)
+    self.password == password
+  end
+
   def secret_link_correct?(secret)
     secret_hash, order_id = secret.split('-')
     order = Spree::Order.find(order_id) rescue nil
