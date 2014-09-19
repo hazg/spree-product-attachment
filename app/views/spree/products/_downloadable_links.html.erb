@@ -7,7 +7,7 @@
           <%= link_to downloadable.title, '#', onclick: "$('#password_protected_download#{downloadable.id}').modal('show');" %>
           <%= render 'password_modal', downloadable: downloadable %>
         <% else %>
-          <%= link_to downloadable.title, spree.downloadable_path(downloadable) %>
+          <%= link_to downloadable.title, spree.downloadable_path(downloadable), {:target => '_blank'} %>
         <% end %>
       </li>
     <% end -%>
