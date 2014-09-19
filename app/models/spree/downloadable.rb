@@ -8,7 +8,8 @@ class Spree::Downloadable < Spree::ProductDownload
   before_save :set_title
 
   scope :visible, where(enabled: true, secret_links_only: false)
-
+  
+  attr_accessible :attachment, :title, :password, :enabled, :secret_links_only
 
   def filename
     attachment_file_name
@@ -71,4 +72,6 @@ class Spree::Downloadable < Spree::ProductDownload
     viewable.variants.any?{|v| order.contains?(v) }
   end
 
+
+  
 end

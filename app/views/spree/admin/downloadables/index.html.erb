@@ -22,7 +22,7 @@
 				<%= f.label t("title") %><br/>
 				<%= f.text_field :title %>
 		  <% end %>
-
+      <!--
       <%= f.field_container :password do %>
         <%= f.label t("password") %><br/>
         <%= f.text_field :password %>
@@ -37,7 +37,7 @@
         <%= f.label t("secret_links_only") %><br/>
         <%= f.check_box :secret_links_only %>
       <% end %>
-
+      -->
 		  <%= hidden_field_tag :product_id, @product.id %>
 
       <p class="form-buttons">
