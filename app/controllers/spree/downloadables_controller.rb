@@ -27,7 +27,7 @@ module Spree
     end
 
     def send_doc
-      send_file(@downloadable.path, { :filename => @downloadable.filename, :type => @downloadable.mime })
+      send_file(@downloadable.path, { :filename => @downloadable.filename, :type => @downloadable.mime, :disposition => 'inline' })
     end
   end
 end
